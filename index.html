@@ -25,9 +25,15 @@
         <nav class="nav-links">
             <a href="#" data-overlay="Sports">Sports</a>
             <a href="#" data-overlay="Sedan">Sedan</a>
+            <div class="search-container" style="--search-width: 220px;">
+  <button class="search-icon" id="searchToggle">
+    <img src="assets/search.svg" alt="Search" width="18" height="18" id="searchIconSVG" />
+  </button>
+  <input type="text" id="searchInput" placeholder="Search for models, series..." />
+  <ul class="suggestions-list" id="suggestionsList"></ul>
+</div>
             <a href="#" data-overlay="Collections">Collections</a>
             <a href="#" data-overlay="Company">Company</a>
-            <a href="#" data-overlay="Experience">Experience</a>
         </nav>
         
         <!-- Side Menu -->

@@ -365,3 +365,22 @@ searchToggle.addEventListener('click', () => {
     searchInput.focus();
   }
 });
+
+// Collapse search when clicking outside
+document.addEventListener('click', (e) => {
+  if (
+    searchContainer.classList.contains('expanded') &&
+    !searchContainer.contains(e.target)
+  ) {
+    searchContainer.classList.remove('expanded');
+    searchInput.blur();
+  }
+});
+
+// Collapse search when pressing ESC
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && searchContainer.classList.contains('expanded')) {
+    searchContainer.classList.remove('expanded');
+    searchInput.blur();
+  }
+});

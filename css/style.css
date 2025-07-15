@@ -25,9 +25,9 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: rgba(255, 255, 255, 0.2);    /* Light translucent white */
-    backdrop-filter: blur(10px);              /* Frosted glass effect */
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background-color: #000 !important;  /* Absolute black */
+    color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
 
 /* Logo Styles */
@@ -47,7 +47,7 @@ body {
     font-size: 1rem;
     letter-spacing: 1.2px;
     text-transform: uppercase;
-    color: black;
+    color: white;
     text-decoration: none;
     transition: all 0.3s ease;
 }
@@ -76,7 +76,7 @@ body {
 .hamburger span {
     width: 100%;
     height: 3px;
-    background: black;
+    background: white;
     border-radius: 2px;
     transition: all 0.4s ease;
     transform-origin: center;
@@ -113,6 +113,7 @@ body {
     object-fit: cover;
     z-index: -1;
 }
+
 
 /* Hero Content */
 .hero-content {
@@ -168,44 +169,62 @@ body {
     height: calc(100vh - 70px);
     margin-top: 103px;
     padding: 60px 30px;
-    
+
     /* Glass Effect Styling */
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(30px) saturate(180%) contrast(120%);
-    box-shadow: inset 0 0 60px rgba(255, 255, 255, 0.1);
-    border-left: 2px solid rgba(255, 255, 255, 0.3);
-    border-radius: 20px 0 0 20px;
-    
+    background-color: #000;
+
     /* Layout */
     display: flex;
     flex-direction: column;
     gap: 30px;
     z-index: 998;
-    
+
     /* Animation */
     transition: right 0.5s ease;
 }
 
 .side-menu a {
+    position: relative;
     font-family: 'Cinzel', serif;
     font-weight: 600;
     font-size: 1.1rem;
     letter-spacing: 1.2px;
-    color: black;
+    color: white;
     text-decoration: none;
     padding-bottom: 2px;
-    border-bottom: 2px solid transparent;
-    transition: border-bottom 0.3s ease;
+    transition: color 0.3s ease;
+}
+
+.side-menu a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0%;
+    height: 2px;
+    background-color: crimson;
+    transition: width 0.4s ease;
 }
 
 .side-menu a:hover {
+    color: #ff3c00; /* Optional: spicy hover color */
+}
+
+.side-menu a:hover::after {
+    width: 100%;
+}
+
+
+.side-menu a:hover {
     border-bottom: 2px solid crimson;
+    color: #ff3c00;                               /* Bonus Touch: sporty hover color */
 }
 
 /* Side Menu Active State */
 .side-menu.show {
     right: 0;
 }
+
 
 /* ================================ */
 /* RESPONSIVE DESIGN */
@@ -324,10 +343,13 @@ body {
 }
 
 .search-container {
-  position: relative;
   display: flex;
   align-items: center;
+  position: relative;
+  height: 40px;
   transition: all 0.4s ease;
+  overflow: visible;
+  background-color: transparent;
 }
 
 .search-container input {
@@ -342,22 +364,34 @@ body {
   transition: width 0.4s ease, opacity 0.3s ease;
 }
 
-.search-container.expanded input {
+.search-container.expanded #searchInput {
   width: var(--search-width, 220px);
   opacity: 1;
 }
-
-.search-icon {
+.search-container.expanded .search-icon {
+  background: transparent;
+  width: auto;
+  height: auto;
+  margin-right: 0;
   position: absolute;
   left: 10px;
-  background: none;
+  z-index: 3;
+  box-shadow: none;
+}
+.search-icon {
+  background: white;
   border: none;
-  cursor: pointer;
-  padding: 0;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: all 0.4s ease;
   z-index: 2;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  padding: 0;
 }
 .search-icon img {
   width: 18px;
@@ -365,12 +399,25 @@ body {
   pointer-events: none; /* lets you click through to the input */
 }
 
+#searchInput {
+  width: 0;
+  opacity: 0;
+  height: 40px;
+  padding: 0 12px 0 42px; /* leave space for icon */
+  border: none;
+  border-radius: 20px;
+  font-size: 0.95rem;
+  transition: width 0.4s ease, opacity 0.3s ease;
+  background: rgba(255, 255, 255, 0.75);
+  color: black;
+  outline: none;
+}
 .suggestions-list {
   position: absolute;
   top: 120%;
   left: 0;
   right: 0;
-  background: rgba(255, 255, 255, 0.85);
+  background: rgba(255,255,255,0.9);
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.1);
   list-style: none;

@@ -1,0 +1,309 @@
+/* ================================ */
+/* GLOBAL RESETS */
+/* ================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    height: 100%;
+    font-family: 'Cinzel', serif;
+}
+
+/* ================================ */
+/* OVERLAY STRUCTURE & LAYOUT */
+/* ================================ */
+
+/* Main Overlay Container */
+.overlay {
+    height: 100vh;
+    width: 100vw;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 1);
+    z-index: 10000;
+    color: white;
+    display: flex;
+    flex-direction: row;
+    
+    /* Initial Hidden State */
+    opacity: 0;
+    transform: translateY(-30px);
+    pointer-events: none;
+    
+    /* Animation */
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+/* Overlay Active State */
+.overlay.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+/* ================================ */
+/* OVERLAY SECTIONS & FLEX LAYOUT */
+/* ================================ */
+
+/* Base Section Styles */
+.overlay-section {
+    padding: 20px;
+    border-right: 1px solid #222;
+    
+    /* Initial Hidden State */
+    opacity: 0;
+    transform: translateX(-20px);
+    
+    /* Animation */
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+/* Section Widths & Background Colors */
+.overlay-section:nth-child(1) {
+    flex: 0.5;                                      /* Logo Panel */
+    background-color: var(--section1-bg, #424242);
+}
+
+.overlay-section:nth-child(2) {
+    flex: 1;                                        /* Main Menu */
+    background-color: var(--section2-bg, #2B2B2B);
+}
+
+.overlay-section:nth-child(3) {
+    flex: 1.5;                                      /* Submenu */
+    background-color: var(--section3-bg, #1B1B1B);
+}
+
+.overlay-section:nth-child(4) {
+    flex: 3;                                        /* Image Display */
+    background-color: var(--section4-bg, #000000);
+}
+
+/* Section Active State */
+.overlay.show .overlay-section {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* ================================ */
+/* LOGO PANEL */
+/* ================================ */
+.left-panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    position: relative;
+    gap: 20px;
+    padding-top: 20px;
+}
+
+.left-panel img {
+    width: 50px;
+    margin-top: 0px;
+}
+
+/* ================================ */
+/* CLOSE BUTTON */
+/* ================================ */
+.close-btn {
+    width: 40px;
+    aspect-ratio: 1;
+    border: 2px solid white;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: white;
+    background: transparent;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.3s ease, background 0.3s ease;
+}
+
+.close-btn:hover {
+    border-color: crimson;
+    background-color: crimson;
+}
+
+/* ================================ */
+/* MAIN MENU SECTION */
+/* ================================ */
+
+/* Menu Heading */
+.menu-heading {
+    font-size: 1rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    opacity: 0.8;
+    padding-left: 5px;
+}
+
+/* Menu Items */
+.menu-title {
+    opacity: 0.5;
+    transition: opacity 0.3s;
+    cursor: pointer;
+    margin-bottom: 15px;
+    position: relative;
+    padding-left: 15px;
+}
+
+.menu-title:hover,
+.menu-title.selected {
+    opacity: 1;
+    font-weight: bold;
+    color: crimson;
+}
+
+/* Menu Item Arrow Indicator */
+.menu-title::after {
+    content: '>';
+    position: absolute;
+    right: 0px;
+    top: 0;
+    padding-left: 6px;
+}
+
+/* ================================ */
+/* SUBMENU SECTION */
+/* ================================ */
+
+/* Submenu Groups */
+.submenu-group {
+    margin-top: 50px;
+    margin-bottom: 20px;
+    
+    /* Initial Hidden State */
+    opacity: 0;
+    transform: translateY(10px);
+    filter: blur(3px);
+    
+    /* Animation */
+    animation: fadeSlideUp 0.4s ease forwards;
+    transition: all 0.5s ease;
+}
+
+.submenu-group.show {
+    opacity: 1;
+    transform: translateY(0);
+    filter: blur(0);
+}
+
+.submenu-group:first-child {
+    margin-top: 0;
+}
+
+/* Submenu Titles */
+.submenu-title {
+    margin-top: 20px;
+    opacity: 0.5;
+    cursor: pointer;
+    position: relative;
+    transition: opacity 0.3s;
+}
+
+.submenu-title:hover,
+.submenu-title.active {
+    opacity: 1;
+}
+
+/* Submenu Dropdown Arrows */
+.submenu-title::after {
+    content: '\25BC';                               /* ▼ down arrow */
+    position: absolute;
+    right: 0px;
+    padding-left: 6px;
+}
+
+.submenu-title.expanded::after {
+    content: '\25B2';                               /* ▲ up arrow */
+}
+
+/* ================================ */
+/* DROPDOWN OPTIONS */
+/* ================================ */
+.submenu-options {
+    margin-top: 10px;
+    margin-left: 15px;
+    
+    /* Initial Hidden State */
+    max-height: 0;
+    overflow: hidden;
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+    
+    /* Animation */
+    transition:
+        max-height 0.4s ease,
+        opacity 0.3s ease,
+        transform 0.3s ease;
+}
+
+/* Dropdown Active State */
+.submenu-title.expanded + .submenu-options {
+    max-height: 500px;                              /* Large enough for tallest submenu */
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+/* Dropdown Items */
+.submenu-options li {
+    list-style: none;
+    opacity: 0.5;
+    transition: opacity 0.3s;
+    cursor: pointer;
+    margin-bottom: 8px;
+}
+
+.submenu-options li:hover,
+.submenu-options li.selected {
+    opacity: 1;
+    font-weight: bold;
+    color: crimson;
+}
+
+/* ================================ */
+/* IMAGE DISPLAY PANEL */
+/* ================================ */
+.image-display {
+    background-color: #111;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #444;
+    font-size: 1.2rem;
+    padding: 20px;
+    text-align: center;
+}
+
+/* ================================ */
+/* ACTIVE STATE HIGHLIGHTS */
+/* ================================ */
+.menu-title.selected,
+.submenu-title.selected {
+    opacity: 1;
+    font-weight: bold;
+    color: crimson;
+}
+
+/* ================================ */
+/* ANIMATIONS */
+/* ================================ */
+@keyframes fadeSlideUp {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

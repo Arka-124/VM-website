@@ -101,6 +101,22 @@ function clearSubmenuSelections() {
 /* ================================ */
 /* NAVIGATION CONTROLS */
 /* ================================ */
+let lastScrollY = window.scrollY;
+const topBar = document.getElementById('topBar');
+
+window.addEventListener('scroll', () => {
+  const currentScrollY = window.scrollY;
+
+  if (currentScrollY > lastScrollY && currentScrollY > 100) {
+    // Scrolling down & passed 100px
+    topBar.classList.add('hidden');
+  } else {
+    // Scrolling up
+    topBar.classList.remove('hidden');
+  }
+
+  lastScrollY = currentScrollY;
+});
 
 /**
  * Hamburger menu toggle functionality

@@ -25,17 +25,11 @@ const imagePanel = document.querySelector('.image-display');
 // Example placeholder submenu structure
 const submenuData = {
     'Sports': {
-    'Owners': {
         'Your VM': ['Model A', 'Model B', 'Model C'],
-        'Your VM Lineups': ['Lineup 1', 'Lineup 2']
-    },
-    'All Models': {
-        'Lineups': ['Model A', 'Model B']
-    },
-    'Classics': {
+        'Your VM Lineups': ['Lineup 1', 'Lineup 2'],
+        'All Models': ['Model A', 'Model B'],
         'Vintage Series': ['Classic 1', 'Classic 2']
     },
-  },
     'Sedan': {
         'Luxury Collection': [
             'VM Royale LX', 

@@ -64,17 +64,17 @@ body, html {
 
 /* Section Widths & Background Colors */
 .overlay-section:nth-child(1) {
-    flex: 0.5;                                      /* Logo Panel */
+    flex: 0.1;                                      /* Logo Panel */
     background-color: var(--section1-bg, #424242);
 }
 
 .overlay-section:nth-child(2) {
-    flex: 1;                                        /* Main Menu */
+    flex: 0.9;                                        /* Main Menu */
     background-color: var(--section2-bg, #2B2B2B);
 }
 
 .overlay-section:nth-child(3) {
-    flex: 1.5;                                      /* Submenu */
+    flex: 1.2;                                      /* Submenu */
     background-color: var(--section3-bg, #1B1B1B);
 }
 

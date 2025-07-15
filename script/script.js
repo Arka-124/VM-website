@@ -280,3 +280,88 @@ function updateImagePanel(selectedOption) {
 sections.forEach((section, index) => {
     section.style.transitionDelay = `${index * 0.1}s`;
 });
+
+// ===============================
+// EXPANDING SEARCH BAR
+// ===============================
+const searchContainer = document.querySelector('.search-container');
+const searchIcon = document.getElementById('searchToggle');
+const searchInput = document.getElementById('searchInput');
+
+searchIcon.addEventListener('click', () => {
+  searchContainer.classList.toggle('expanded');
+  if (searchContainer.classList.contains('expanded')) {
+    searchInput.focus();
+  } else {
+    searchInput.value = '';
+  }
+});
+
+// Optional: collapse on blur
+searchInput.addEventListener('blur', () => {
+  setTimeout(() => {
+    searchContainer.classList.remove('expanded');
+    searchInput.value = '';
+  }, 150); // Give it a moment so it doesn't disappear immediately
+});
+
+const suggestionsBox = document.getElementById('searchSuggestions');
+
+// Sample suggestions — you can fetch dynamically or expand
+const searchItems = [
+  "Model A", "Model B", "Model C",
+  "Lineup 1", "Lineup 2",
+  "Classic 1", "Classic 2",
+  "Sedan Premium", "VM Cortex", "Crossover Series",
+  "Electric Dreams", "Carbon Edition", "Off-Road Master"
+];
+
+searchInput.addEventListener('input', () => {
+  const query = searchInput.value.trim().toLowerCase();
+  suggestionsBox.innerHTML = '';
+
+  if (query.length === 0) {
+    suggestionsBox.style.display = 'none';
+    return;
+  }
+
+  const filtered = searchItems.filter(item =>
+    item.toLowerCase().includes(query)
+  );
+
+  if (filtered.length === 0) {
+    suggestionsBox.innerHTML = '<li>No results found</li>';
+  } else {
+    filtered.forEach(suggestion => {
+      const li = document.createElement('li');
+      li.textContent = suggestion;
+      li.addEventListener('click', () => {
+        searchInput.value = suggestion;
+        suggestionsBox.style.display = 'none';
+        // Optional: Trigger overlay or navigate based on suggestion
+        console.log('User selected:', suggestion);
+      });
+      suggestionsBox.appendChild(li);
+    });
+  }
+
+  suggestionsBox.style.display = 'block';
+});
+
+// Hide suggestions when clicking outside
+document.addEventListener('click', (e) => {
+  if (!searchContainer.contains(e.target)) {
+    suggestionsBox.style.display = 'none';
+  }
+});
+document.getElementById('searchToggle').addEventListener('click', () => {
+  document.querySelector('.search-container').classList.toggle('expanded');
+  document.getElementById('searchInput').focus();
+});
+const searchToggle = document.getElementById('searchToggle');
+searchToggle.addEventListener('click', () => {
+  searchContainer.classList.toggle('expanded');
+  if (searchContainer.classList.contains('expanded')) {
+    searchInput.focus();
+  }
+});

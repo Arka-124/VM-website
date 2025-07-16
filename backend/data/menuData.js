@@ -1,8 +1,16 @@
 const submenuData = {
   'Sports': {
+    'All Models': {
+        'Range' : ['Model A', 'Model B'],
+        'Special Series' :['Model A', 'Model B'],
+        'Icona' : ['Model A', 'Model B'],
+        'Supercars' : ['Model A', 'Model B'],
+        'GT Racing' : ['Model A', 'Model B'],
+        'Past Models' : [],
+    },
     'Your VM': ['Model A', 'Model B', 'Model C'],
     'Your VM Lineups': ['Lineup 1', 'Lineup 2'],
-    'All Models': ['Model A', 'Model B'],
+    
     'Vintage Series': ['Classic 1', 'Classic 2']
   },
   'Sedan': {

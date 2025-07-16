@@ -279,9 +279,14 @@ class VMAutomobileApp {
         button.classList.add('selected');
         button.setAttribute('aria-expanded', 'true');
 
-        if (menuData) {
-            this.buildSubmenuGroups({ [menuItem]: menuData });
+        if (menuData && typeof menuData === 'object' && !Array.isArray(menuData)) {
+          // Already in correct format
+          this.buildSubmenuGroups(menuData);
+        } else {
+          // Wrap in a default group name
+          this.buildSubmenuGroups({ [menuItem]: menuData });
         }
+
     }
 
     buildSubmenuGroups(menuData) {

@@ -3,11 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="VM Automobile - Luxury cars including sports cars, sedans, and premium collections">
-    <title>VM Automobile - Luxury Cars & Sports Vehicles</title>
-    
-    <!-- Preload critical resources -->
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&display=swap" as="style">
+    <title>VM</title>
     
     <!-- Stylesheets -->
     <link rel="stylesheet" href="css/style.css">
@@ -19,108 +15,94 @@
     <!-- ================================ -->
     <!-- HEADER / NAVIGATION -->
     <!-- ================================ -->
-    <header class="navbar" role="banner">
+    <header class="navbar">
         <!-- Logo -->
         <div class="logo">
-            <img src="assets/logo.svg" alt="VM Automobile Logo" width="120" height="40">
+            <img src="assets/logo.svg" alt="VM Automobile Logo">
         </div>
         
         <!-- Main Navigation Links -->
-        <nav class="nav-links" role="navigation" aria-label="Main navigation">
-            <a href="#" data-overlay="Sports" aria-haspopup="true">Sports</a>
-            <a href="#" data-overlay="Sedan" aria-haspopup="true">Sedan</a>
+        <nav class="nav-links">
+            <a href="#" data-overlay="Sports">Sports</a>
+            <a href="#" data-overlay="Sedan">Sedan</a>
             
-            <!-- Search Component -->
+            <!-- Search Container -->
             <div class="search-container" style="--search-width: 220px;">
-                <button class="search-icon" id="searchToggle" aria-label="Toggle search" aria-expanded="false">
+                <button class="search-icon" id="searchToggle">
                     <span class="icon-wrapper">
-                        <img src="assets/search.svg" alt="" id="searchIconSVG" width="20" height="20" />
+                        <img src="assets/search.svg" alt="Search Icon" id="searchIconSVG" />
                     </span>
                 </button>
-                <input 
-                    type="text" 
-                    id="searchInput" 
-                    placeholder="Search for models, series..." 
-                    aria-label="Search for models and series"
-                    autocomplete="off"
-                />
-                <ul class="suggestions-list" id="suggestionsList" role="listbox" aria-label="Search suggestions"></ul>
+                <input type="text" id="searchInput" placeholder="Search for models, series..." />
+                <ul class="suggestions-list" id="suggestionsList"></ul>
             </div>
 
-            <a href="#" data-overlay="Collections" aria-haspopup="true">Collections</a>
-            <a href="#" data-overlay="Company" aria-haspopup="true">Company</a>
+            <a href="#" data-overlay="Collections">Collections</a>
+            <a href="#" data-overlay="Company">Company</a>
         </nav>
         
         <!-- Side Menu -->
-        <aside class="side-menu" id="sideMenu" role="complementary">
-            <nav aria-label="Secondary navigation">
-                <a href="#">Browse All</a>
-                <a href="#">Merchandise</a>
-                <a href="#">About Us</a>
-            </nav>
-        </aside>
+        <div class="side-menu" id="sideMenu">
+            <a href="#">Browse All</a>
+            <a href="#">Merchandise</a>
+            <a href="#">About Us</a>
+        </div>
         
         <!-- Mobile Hamburger Menu -->
-        <button class="hamburger" id="mobileMenuToggle" aria-label="Toggle mobile menu" aria-expanded="false">
+        <div class="hamburger">
             <span></span>
             <span></span>
             <span></span>
-        </button>
+        </div>
     </header>
 
     <!-- ================================ -->
     <!-- HERO SECTION -->
     <!-- ================================ -->
-    <main>
-        <section class="hero" role="main">
-            <img src="assets/bg.jpg" alt="Luxury car driving on scenic coastal road" class="hero-bg" width="1920" height="1080">
-            
-            <div class="hero-content">
-                <a href="#" class="btn" role="button">Learn More</a>
-                <div class="hero-text">
-                    <h1>Explore the All-new<br>VM Cortex</h1>
-                    <p>It does all the thinking for you<br>leaving you to just enjoy the ride</p>
-                </div>
+    <section class="hero">
+        <img src="assets/bg.jpg" alt="Car on Coastal Road" class="hero-bg">
+        
+        <div class="hero-content">
+            <a href="#" class="btn">Learn More</a>
+            <div class="hero-text">
+                <h1>Explore the All-new<br>VM Cortex</h1>
+                <p>It does all the thinking for you<br>leaving you to just enjoy the ride</p>
             </div>
-        </section>
-    </main>
+        </div>
+    </section>
 
     <!-- ================================ -->
     <!-- OVERLAY NAVIGATION SYSTEM -->
     <!-- ================================ -->
-    <div class="overlay" id="overlay" role="dialog" aria-hidden="true" aria-labelledby="overlayTitle">
+    <div class="overlay" id="overlay">
         
         <!-- Logo Panel -->
         <div class="overlay-section logo-section">
             <div class="left-panel">
-                <img src="assets/logo.svg" alt="VM Automobile Logo" width="80" height="30">
-                <button class="close-btn" aria-label="Close overlay">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+                <img src="assets/logo.svg" alt="Logo">
+                <button class="close-btn">X</button>
             </div>
         </div>
 
         <!-- Main Menu Panel (1st Pane) -->
         <div class="overlay-section menu-section" id="menuPane">
-            <h2 class="menu-heading" id="overlayTitle">Sports Cars</h2>
+            <div class="menu-heading">Sports Cars</div>
             
-            <nav role="navigation" aria-label="Category navigation">
-                <button class="menu-title" data-menu="models" aria-expanded="false">All Models</button>
-                <button class="menu-title" data-menu="your-vm" aria-expanded="false">Your VM</button>
-                <button class="menu-title" data-menu="owners" aria-expanded="false">Owners</button>
-                <button class="menu-title" data-menu="classics" aria-expanded="false">Classics</button>
-                <button class="menu-title" data-menu="pre-owned" aria-expanded="false">Pre-Owned</button>
-                <button class="menu-title" data-menu="dealers" aria-expanded="false">Dealers</button>
-            </nav>
+            <div class="menu-title" data-menu="models">All Models</div>
+            <div class="menu-title" data-menu="your-vm">Your VM</div>
+            <div class="menu-title" data-menu="owners">Owners</div>
+            <div class="menu-title" data-menu="classics">Classics</div>
+            <div class="menu-title" data-menu="pre-owned">Pre-Owned</div>
+            <div class="menu-title" data-menu="dealers">Dealers</div>
         </div>
 
         <!-- Submenu Panel (2nd Pane) -->
-        <div class="overlay-section sub-menu-section" id="submenuPane" role="navigation" aria-label="Submenu navigation">
+        <div class="overlay-section sub-menu-section" id="submenuPane">
             <!-- Content filled dynamically via JavaScript -->
         </div>
 
         <!-- Image Preview Panel (3rd Pane) -->
-        <div class="overlay-section image-display" id="imagePane" role="img" aria-live="polite">
+        <div class="overlay-section image-display" id="imagePane">
             <p>Select a model to preview image</p>
         </div>
         
@@ -129,33 +111,31 @@
     <!-- ================================ -->
     <!-- SVG FILTERS & ANIMATIONS -->
     <!-- ================================ -->
-    <svg width="0" height="0" aria-hidden="true">
-        <defs>
-            <filter id="noiseFilter">
-                <feTurbulence 
-                    type="turbulence" 
-                    baseFrequency="0.01" 
-                    numOctaves="1" 
-                    result="turb" 
-                    seed="2">
-                    <animate 
-                        attributeName="baseFrequency" 
-                        values="0.01;0.02;0.01" 
-                        dur="2s" 
-                        repeatCount="indefinite" />
-                </feTurbulence>
-                <feDisplacementMap 
-                    in="SourceGraphic" 
-                    in2="turb" 
-                    scale="4" />
-            </filter>
-        </defs>
+    <svg width="0" height="0">
+        <filter id="noiseFilter">
+            <feTurbulence 
+                type="turbulence" 
+                baseFrequency="0.01" 
+                numOctaves="1" 
+                result="turb" 
+                seed="2">
+                <animate 
+                    attributeName="baseFrequency" 
+                    values="0.01;0.02;0.01" 
+                    dur="2s" 
+                    repeatCount="indefinite" />
+            </feTurbulence>
+            <feDisplacementMap 
+                in="SourceGraphic" 
+                in2="turb" 
+                scale="4" />
+        </filter>
     </svg>
 
     <!-- ================================ -->
     <!-- JAVASCRIPT -->
     <!-- ================================ -->
-    <script src="script/script.js" defer></script>
+    <script src="script/script.js"></script>
 
 </body>
 </html>

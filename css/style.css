@@ -21,7 +21,7 @@ body {
     left: 0;
     width: 100%;
     z-index: 9999;
-    padding: 20px 60px;
+    padding: 20px 40px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -29,6 +29,12 @@ body {
     color: white;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
     transition: transform 0.4s ease, opacity 0.4s ease;
+}
+.nav-center {
+  display: flex;
+  align-items: center;
+  gap: 30px; /* Even spacing */
+  position: relative;
 }
 
 #navbar.hidden {
@@ -247,11 +253,12 @@ body {
 }
 
 .search-icon img {
-    width: 18px;
-    height: 18px;
-    pointer-events: none;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background-color: white;
+  transition: all 0.3s ease;
 }
-
 .search-container.expanded .search-icon {
     background: transparent;
     width: auto;

@@ -18,67 +18,45 @@ const CONFIG = {
     }
 };
 
-const SEARCH_ITEMS = [
-    "Model A", "Model B", "Model C",
-    "Lineup 1", "Lineup 2",
-    "Classic 1", "Classic 2",
-    "Sedan Premium", "VM Cortex", "Crossover Series",
-    "Electric Dreams", "Carbon Edition", "Off-Road Master"
-];
+searchInput.addEventListener('input', () => {
+  const query = searchInput.value.trim().toLowerCase();
+  suggestionsBox.innerHTML = '';
 
-const SUBMENU_DATA = {
-    'Sports': {
-        'Your VM': ['Model A', 'Model B', 'Model C'],
-        'Your VM Lineups': ['Lineup 1', 'Lineup 2'],
-        'All Models': ['Model A', 'Model B'],
-        'Vintage Series': ['Classic 1', 'Classic 2']
-    },
-    'Sedan': {
-        'Luxury Collection': [
-            'VM Royale LX', 
-            'VM Majesty S', 
-            'VM Emperor GT', 
-            'VM Monarch Platinum'
-        ],
-        'Performance Series': [
-            'VM Apex R', 
-            'VM Tempest 500', 
-            'VM Veloce S', 
-            'VM Blitz T'
-        ],
-        'Eco Hybrid': [
-            'VM EcoZen', 
-            'VM ElectraDrive', 
-            'VM Leafon', 
-            'VM Greenstride'
-        ],
-        'Urban Comfort': [
-            'VM MetroX', 
-            'VM ComfyCruise', 
-            'VM SwiftLine', 
-            'VM Glide Eco'
-        ],
-        'Executive Business Class': [
-            'VM Stratagem', 
-            'VM Titan E', 
-            'VM Blackline X', 
-            'VM Prestige V'
-        ],
-        'Concept & Future Tech': [
-            'VM Aurora Prototype', 
-            'VM Quantum Drive', 
-            'VM AlphaZero'
-        ]
-    },
-    'Collections': {
-        'Heritage Collection': ['VM Classic 1960', 'VM Vintage 1975'],
-        'Limited Editions': ['VM Anniversary', 'VM Signature']
-    },
-    'Company': {
-        'About Us': ['History', 'Vision', 'Team'],
-        'Careers': ['Current Openings', 'Internships']
-    }
-};
+  if (query.length === 0) {
+    suggestionsBox.style.display = 'none';
+    return;
+  }
+
+  // Fetch from backend
+  fetch(`http://localhost:5000/api/search?q=${encodeURIComponent(query)}`)
+    .then(res => res.json())
+    .then(data => {
+      if (data.length === 0) {
+        suggestionsBox.innerHTML = '<li>No results found</li>';
+      } else {
+        data.forEach(suggestion => {
+          const li = document.createElement('li');
+          li.textContent = suggestion;
+
+          li.addEventListener('click', () => {
+            searchInput.value = suggestion;
+            suggestionsBox.style.display = 'none';
+            console.log('User selected:', suggestion);
+            // Optionally trigger overlay or search result
+          });
+
+          suggestionsBox.appendChild(li);
+        });
+      }
+
+      suggestionsBox.style.display = 'block';
+    })
+    .catch(err => {
+      console.error('Search API error:', err);
+      suggestionsBox.innerHTML = '<li>Error loading suggestions</li>';
+      suggestionsBox.style.display = 'block';
+    });
+});
 
 /* ================================ */
 /* DOM ELEMENT CACHE */
@@ -133,6 +111,18 @@ class DOMCache {
         return document.querySelectorAll(selector);
     }
 }
+let submenuData = {};
+
+async function fetchMenuData() {
+    try {
+        const res = await fetch('http://localhost:5000/api/menu');
+        const data = await res.json();
+        submenuData = data;
+    } catch (err) {
+        console.error('Failed to fetch menu data:', err);
+    }
+}
+
 
 /* ================================ */
 /* MAIN APPLICATION CLASS */
@@ -196,18 +186,26 @@ class VMAutomobileApp {
         hamburger?.setAttribute('aria-expanded', isExpanded);
     }
 
-    handleNavClick(e, link) {
-        e.preventDefault();
-        
-        const category = link.dataset.overlay?.trim();
-        if (!category || !SUBMENU_DATA.hasOwnProperty(category)) {
-            console.warn(`Invalid category: ${category}`);
-            return;
-        }
+    async handleNavClick(e, link) {
+    e.preventDefault();
 
-        this.state.currentCategory = category;
-        this.openOverlay(category);
+    const category = link.dataset.overlay?.trim();
+    if (!category) return;
+
+    // Fetch from backend if data is empty
+    if (Object.keys(submenuData).length === 0) {
+        await fetchMenuData();
     }
+
+    if (!submenuData.hasOwnProperty(category)) {
+        console.warn(`Invalid category: ${category}`);
+        return;
+    }
+
+    this.state.currentCategory = category;
+    this.openOverlay(category);
+}
+
 
     /* ================================ */
     /* OVERLAY SYSTEM */
@@ -254,7 +252,7 @@ class VMAutomobileApp {
 
     buildMenuPane(category) {
         const menuPane = this.dom.get('menuPane');
-        const data = SUBMENU_DATA[category];
+        const data = submenuData[category];
         
         if (!menuPane || !data) return;
 

@@ -26,11 +26,14 @@ searchInput.addEventListener('input', () => {
     suggestionsBox.style.display = 'none';
     return;
   }
+const BASE_URL = window.location.hostname === 'localhost'
+  ? 'http://localhost:5000'
+  : 'https://vm-automobiles.onrender.com';
 
   // Fetch from backend
-  fetch(`http://localhost:5000/api/search?q=${encodeURIComponent(query)}`)
-    .then(res => res.json())
-    .then(data => {
+  fetch(`${BASE_URL}/api/search?q=${encodeURIComponent(query)}`)
+  .then(res => res.json())
+  .then(data => {
       if (data.length === 0) {
         suggestionsBox.innerHTML = '<li>No results found</li>';
       } else {

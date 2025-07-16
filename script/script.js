@@ -301,29 +301,12 @@ sections.forEach((section, index) => {
 // EXPANDING SEARCH BAR
 // ===============================
 const searchContainer = document.querySelector('.search-container');
-const searchIcon = document.getElementById('searchToggle');
+const searchToggle = document.getElementById('searchToggle');
 const searchInput = document.getElementById('searchInput');
-
-searchIcon.addEventListener('click', () => {
-  searchContainer.classList.toggle('expanded');
-  if (searchContainer.classList.contains('expanded')) {
-    searchInput.focus();
-  } else {
-    searchInput.value = '';
-  }
-});
-
-// Optional: collapse on blur
-searchInput.addEventListener('blur', () => {
-  setTimeout(() => {
-    searchContainer.classList.remove('expanded');
-    searchInput.value = '';
-  }, 150); // Give it a moment so it doesn't disappear immediately
-});
-
 const suggestionsBox = document.getElementById('searchSuggestions');
 
-// Sample suggestions — you can fetch dynamically or expand
+let isExpanded = false;
+
 const searchItems = [
   "Model A", "Model B", "Model C",
   "Lineup 1", "Lineup 2",
@@ -332,6 +315,40 @@ const searchItems = [
   "Electric Dreams", "Carbon Edition", "Off-Road Master"
 ];
 
+// Expand/collapse logic
+searchToggle.addEventListener('click', (e) => {
+  e.stopPropagation(); // Prevent bubbling up
+  isExpanded = !isExpanded;
+  searchContainer.classList.toggle('expanded', isExpanded);
+
+  if (isExpanded) {
+    searchInput.focus();
+  } else {
+    searchInput.value = '';
+    suggestionsBox.style.display = 'none';
+  }
+});
+
+// Click outside to collapse
+document.addEventListener('click', (e) => {
+  if (!searchContainer.contains(e.target)) {
+    isExpanded = false;
+    searchContainer.classList.remove('expanded');
+    suggestionsBox.style.display = 'none';
+  }
+});
+
+// ESC key to collapse
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && isExpanded) {
+    isExpanded = false;
+    searchContainer.classList.remove('expanded');
+    suggestionsBox.style.display = 'none';
+    searchInput.blur();
+  }
+});
+
+// Search suggestions logic
 searchInput.addEventListener('input', () => {
   const query = searchInput.value.trim().toLowerCase();
   suggestionsBox.innerHTML = '';
@@ -354,7 +371,6 @@ searchInput.addEventListener('input', () => {
       li.addEventListener('click', () => {
         searchInput.value = suggestion;
         suggestionsBox.style.display = 'none';
-        // Optional: Trigger overlay or navigate based on suggestion
         console.log('User selected:', suggestion);
       });
       suggestionsBox.appendChild(li);
@@ -362,41 +378,4 @@ searchInput.addEventListener('input', () => {
   }
 
   suggestionsBox.style.display = 'block';
-});
-
-// Hide suggestions when clicking outside
-document.addEventListener('click', (e) => {
-  if (!searchContainer.contains(e.target)) {
-    suggestionsBox.style.display = 'none';
-  }
-});
-document.getElementById('searchToggle').addEventListener('click', () => {
-  document.querySelector('.search-container').classList.toggle('expanded');
-  document.getElementById('searchInput').focus();
-});
-const searchToggle = document.getElementById('searchToggle');
-searchToggle.addEventListener('click', () => {
-  searchContainer.classList.toggle('expanded');
-  if (searchContainer.classList.contains('expanded')) {
-    searchInput.focus();
-  }
-});
-
-// Collapse search when clicking outside
-document.addEventListener('click', (e) => {
-  if (
-    searchContainer.classList.contains('expanded') &&
-    !searchContainer.contains(e.target)
-  ) {
-    searchContainer.classList.remove('expanded');
-    searchInput.blur();
-  }
-});
-
-// Collapse search when pressing ESC
-document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape' && searchContainer.classList.contains('expanded')) {
-    searchContainer.classList.remove('expanded');
-    searchInput.blur();
-  }
 });

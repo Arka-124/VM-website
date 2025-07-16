@@ -26,9 +26,7 @@ searchInput.addEventListener('input', () => {
     suggestionsBox.style.display = 'none';
     return;
   }
-const BASE_URL = window.location.hostname === 'localhost'
-  ? 'http://localhost:5000'
-  : 'https://vm-automobiles.onrender.com';
+const BASE_URL = 'https://vm-automobiles.onrender.com';
 
   // Fetch from backend
   fetch(`${BASE_URL}/api/search?q=${encodeURIComponent(query)}`)

@@ -17,3 +17,6 @@ app.get('/api/menu', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
 });
+app.get('/', (req, res) => {
+  res.send('🚗 VM Automobiles Backend is up and running!');
+});

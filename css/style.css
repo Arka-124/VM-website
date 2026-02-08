@@ -392,3 +392,64 @@ body {
     color: white;
     font-size: 1.2rem;
 }
+
+/* ================================ */
+/* NOTIFICATION TOAST */
+/* ================================ */
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #333;
+    color: white;
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    display: none;
+    align-items: center;
+    gap: 15px;
+    z-index: 100000;
+    max-width: 400px;
+    animation: slideIn 0.3s ease;
+}
+
+.notification.show {
+    display: flex;
+}
+
+.notification.error {
+    background: #d32f2f;
+}
+
+.notification.success {
+    background: #388e3c;
+}
+
+.notification.warning {
+    background: #f57c00;
+}
+
+#notificationClose {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}

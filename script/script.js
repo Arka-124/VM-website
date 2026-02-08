@@ -17,47 +17,16 @@ const CONFIG = {
         FADE_IN: 10
     }
 };
+// Sample search data (temporary - will be replaced with API data)
+const SEARCH_ITEMS = [
+    'Model A', 'Model B', 'Model C',
+    'VM Royale LX', 'VM Majesty S',
+    'VM Apex R', 'VM Tempest 500',
+    'VM Classic 1960', 'VM Vintage 1975',
+    'VM Anniversary', 'VM Signature',
+    'Sports Cars', 'Sedan', 'Collections'
+];
 
-searchInput.addEventListener('input', () => {
-  const query = searchInput.value.trim().toLowerCase();
-  suggestionsBox.innerHTML = '';
-
-  if (query.length === 0) {
-    suggestionsBox.style.display = 'none';
-    return;
-  }
-const BASE_URL = 'https://vm-automobiles.onrender.com';
-
-  // Fetch from backend
-  fetch(`${BASE_URL}/api/search?q=${encodeURIComponent(query)}`)
-  .then(res => res.json())
-  .then(data => {
-      if (data.length === 0) {
-        suggestionsBox.innerHTML = '<li>No results found</li>';
-      } else {
-        data.forEach(suggestion => {
-          const li = document.createElement('li');
-          li.textContent = suggestion;
-
-          li.addEventListener('click', () => {
-            searchInput.value = suggestion;
-            suggestionsBox.style.display = 'none';
-            console.log('User selected:', suggestion);
-            // Optionally trigger overlay or search result
-          });
-
-          suggestionsBox.appendChild(li);
-        });
-      }
-
-      suggestionsBox.style.display = 'block';
-    })
-    .catch(err => {
-      console.error('Search API error:', err);
-      suggestionsBox.innerHTML = '<li>Error loading suggestions</li>';
-      suggestionsBox.style.display = 'block';
-    });
-});
 
 /* ================================ */
 /* DOM ELEMENT CACHE */
@@ -594,4 +563,5 @@ document.addEventListener('DOMContentLoaded', () => {
 // Export for module usage if needed
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = VMAutomobileApp;
+
 }

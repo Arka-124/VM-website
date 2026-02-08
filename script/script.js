@@ -8,15 +8,7 @@
 /* CONSTANTS & CONFIGURATION */
 /* ================================ */
 
-const CONFIG = {
-    SCROLL_THRESHOLD: 100,
-    ANIMATION_DELAY: 100,
-    SEARCH_MIN_LENGTH: 1,
-    TRANSITION_DELAYS: {
-        SECTION: 0.1,
-        FADE_IN: 10
-    }
-};
+
 // Sample search data (temporary - will be replaced with API data)
 const SEARCH_ITEMS = [
     'Model A', 'Model B', 'Model C',
@@ -85,11 +77,22 @@ let submenuData = {};
 
 async function fetchMenuData() {
     try {
-        const res = await fetch('http://localhost:5000/api/menu');
+        const config = window.APP_CONFIG || CONFIG;
+        const url = `${config.API.BASE_URL}${config.API.ENDPOINTS.MENU}`;
+        
+        console.log(`Fetching menu data from: ${url}`);
+        const res = await fetch(url);
+        
+        if (!res.ok) {
+            throw new Error(`HTTP error! status: ${res.status}`);
+        }
+        
         const data = await res.json();
         submenuData = data;
+        console.log('Menu data loaded successfully');
     } catch (err) {
         console.error('Failed to fetch menu data:', err);
+        alert('Failed to load menu data. Please check your connection.');
     }
 }
 
@@ -295,7 +298,7 @@ class VMAutomobileApp {
         groupDiv.appendChild(optionsList);
 
         // Trigger animation
-        setTimeout(() => groupDiv.classList.add('show'), CONFIG.TRANSITION_DELAYS.FADE_IN);
+        setTimeout(() => groupDiv.classList.add('show'), window.APP_CONFIG.TRANSITION_DELAYS.FADE_IN);
 
         return groupDiv;
     }
@@ -378,7 +381,7 @@ class VMAutomobileApp {
 
         suggestionsList.innerHTML = '';
 
-        if (query.length < CONFIG.SEARCH_MIN_LENGTH) {
+        if (query.length < window.APP_window.APP_CONFIG.SEARCH_MIN_LENGTH) {
             suggestionsList.style.display = 'none';
             return;
         }
@@ -457,7 +460,7 @@ class VMAutomobileApp {
         
         if (!topBar) return;
 
-        if (currentScrollY > this.state.lastScrollY && currentScrollY > CONFIG.SCROLL_THRESHOLD) {
+        if (currentScrollY > this.state.lastScrollY && currentScrollY > window.APP_CONFIG.SCROLL_THRESHOLD) {
             // Scrolling down & passed threshold
             topBar.classList.add('hidden');
         } else {
@@ -529,7 +532,7 @@ class VMAutomobileApp {
     setupAnimations() {
         const sections = this.dom.getAll('.overlay-section');
         sections.forEach((section, index) => {
-            section.style.transitionDelay = `${index * CONFIG.TRANSITION_DELAYS.SECTION}s`;
+            section.style.transitionDelay = `${index * window.APP_CONFIG.TRANSITION_DELAYS.SECTION}s`;
         });
     }
 
@@ -565,3 +568,4 @@ if (typeof module !== 'undefined' && module.exports) {
     module.exports = VMAutomobileApp;
 
 }
+

@@ -76,7 +76,13 @@ class DOMCache {
 let submenuData = {};
 
 async function fetchMenuData() {
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    
     try {
+        if (loadingOverlay) {
+            loadingOverlay.classList.add('show');
+        }
+        
         const config = window.APP_CONFIG || CONFIG;
         const url = `${config.API.BASE_URL}${config.API.ENDPOINTS.MENU}`;
         
@@ -90,9 +96,15 @@ async function fetchMenuData() {
         const data = await res.json();
         submenuData = data;
         console.log('Menu data loaded successfully');
+        showNotification('Menu loaded successfully', 'success', 2000);
+        
     } catch (err) {
         console.error('Failed to fetch menu data:', err);
-        alert('Failed to load menu data. Please check your connection.');
+        showNotification('Failed to load menu. Please try again.', 'error');
+    } finally {
+        if (loadingOverlay) {
+            loadingOverlay.classList.remove('show');
+        }
     }
 }
 
@@ -486,10 +498,32 @@ class VMAutomobileApp {
             }
         });
     }
+/* ================================ */
+/* UTILITY FUNCTIONS */
+/* ================================ */
 
-    /* ================================ */
-    /* UTILITY FUNCTIONS */
-    /* ================================ */
+function showNotification(message, type = 'info', duration = 5000) {
+    const notification = document.getElementById('notification');
+    const messageEl = document.getElementById('notificationMessage');
+    const closeBtn = document.getElementById('notificationClose');
+    
+    if (!notification || !messageEl) return;
+    
+    // Set message and type
+    messageEl.textContent = message;
+    notification.className = `notification ${type} show`;
+    
+    // Auto-hide after duration
+    const timeout = setTimeout(() => {
+        notification.classList.remove('show');
+    }, duration);
+    
+    // Close button
+    closeBtn.onclick = () => {
+        clearTimeout(timeout);
+        notification.classList.remove('show');
+    };
+}
 
     createElement(tag, className = '', textContent = '') {
         const element = document.createElement(tag);
@@ -568,4 +602,5 @@ if (typeof module !== 'undefined' && module.exports) {
     module.exports = VMAutomobileApp;
 
 }
+
 

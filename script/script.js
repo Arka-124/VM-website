@@ -174,24 +174,24 @@ class VMAutomobileApp {
     }
 
     async handleNavClick(e, link) {
-    e.preventDefault();
+        e.preventDefault();
 
-    const category = link.dataset.overlay?.trim();
-    if (!category) return;
+        const category = link.dataset.overlay?.trim();
+        if (!category) return;
 
-    // Fetch from backend if data is empty
-    if (Object.keys(submenuData).length === 0) {
-        await fetchMenuData();
+        // Fetch from backend if data is empty
+        if (Object.keys(submenuData).length === 0) {
+            await fetchMenuData();
+        }
+
+        if (!submenuData.hasOwnProperty(category)) {
+            console.warn(`Invalid category: ${category}`);
+            return;
+        }
+
+        this.state.currentCategory = category;
+        this.openOverlay(category);
     }
-
-    if (!submenuData.hasOwnProperty(category)) {
-        console.warn(`Invalid category: ${category}`);
-        return;
-    }
-
-    this.state.currentCategory = category;
-    this.openOverlay(category);
-}
 
 
     /* ================================ */
@@ -253,97 +253,85 @@ class VMAutomobileApp {
 
         // Create menu items
         Object.keys(data).forEach(menuItem => {
-            const button = this.createElement('button', 'menu-title', menuItem);
-            button.setAttribute('aria-expanded', 'false');
-            button.addEventListener('click', () => this.handleMenuItemClick(button, menuItem, data[menuItem]));
-            menuPane.appendChild(button);
+            const div = this.createElement('div', 'menu-title', menuItem);
+            div.setAttribute('data-menu', menuItem.toLowerCase().replace(/ /g, '-'));
+            div.setAttribute('role', 'button');
+            div.setAttribute('tabindex', '0');
+            div.setAttribute('aria-expanded', 'false');
+
+            div.addEventListener('click', () => this.selectMenuItem(menuItem, category));
+            div.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    this.selectMenuItem(menuItem, category);
+                }
+            });
+
+            menuPane.appendChild(div);
         });
     }
 
-    handleMenuItemClick(button, menuItem, menuData) {
-        this.clearSelections();
+    selectMenuItem(menuItem, category) {
+        this.clearMenuSelections();
         
-        button.classList.add('selected');
-        button.setAttribute('aria-expanded', 'true');
-
-        if (menuData && typeof menuData === 'object' && !Array.isArray(menuData)) {
-          // Already in correct format
-          this.buildSubmenuGroups(menuData);
-        } else {
-          // Wrap in a default group name
-          this.buildSubmenuGroups({ [menuItem]: menuData });
-        }
-
-    }
-
-    buildSubmenuGroups(menuData) {
-        const submenuSection = this.dom.get('submenuSection');
-        if (!submenuSection) return;
-
-        submenuSection.innerHTML = '';
-
-        Object.keys(menuData).forEach((groupName, index) => {
-            const groupDiv = this.createSubmenuGroup(groupName, menuData[groupName], index);
-            submenuSection.appendChild(groupDiv);
-        });
-    }
-
-    createSubmenuGroup(groupName, options, index) {
-        const groupDiv = this.createElement('div', 'submenu-group');
-        groupDiv.style.animationDelay = `${index * CONFIG.ANIMATION_DELAY}ms`;
-
-        const groupTitle = this.createElement('div', 'submenu-title', groupName);
-        const optionsList = this.createElement('ul', 'submenu-options');
-
-        // Expand/collapse functionality
-        groupTitle.addEventListener('click', () => {
-            groupTitle.classList.toggle('expanded');
-            const isExpanded = groupTitle.classList.contains('expanded');
-            groupTitle.setAttribute('aria-expanded', isExpanded);
-        });
-
-        // Create option items
-        options.forEach(option => {
-            const listItem = this.createOptionItem(option);
-            optionsList.appendChild(listItem);
-        });
-
-        groupDiv.appendChild(groupTitle);
-        groupDiv.appendChild(optionsList);
-
-        // Trigger animation
-        setTimeout(() => groupDiv.classList.add('show'), window.APP_CONFIG.TRANSITION_DELAYS.FADE_IN);
-
-        return groupDiv;
-    }
-
-    createOptionItem(optionText) {
-        const listItem = this.createElement('li', '', optionText);
-        listItem.setAttribute('role', 'option');
-        listItem.setAttribute('tabindex', '0');
-
-        const clickHandler = () => {
-            this.clearSubmenuSelections();
-            listItem.classList.add('selected');
-            listItem.setAttribute('aria-selected', 'true');
-            this.updateImagePanel(optionText);
-        };
-
-        listItem.addEventListener('click', clickHandler);
-        listItem.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                clickHandler();
+        const menuTitles = this.dom.getAll('.menu-title');
+        menuTitles.forEach(title => {
+            if (title.textContent === menuItem) {
+                title.classList.add('selected');
+                title.setAttribute('aria-expanded', 'true');
             }
         });
 
-        return listItem;
+        this.buildSubmenu(menuItem, category);
     }
 
-    updateImagePanel(selectedOption) {
+    buildSubmenu(menuItem, category) {
+        const submenuSection = this.dom.get('submenuSection');
+        const data = submenuData[category][menuItem];
+        
+        if (!submenuSection || !data) return;
+
+        submenuSection.innerHTML = '';
+        this.clearSubmenuSelections();
+
+        const ul = this.createElement('ul');
+        ul.setAttribute('role', 'menu');
+
+        data.forEach(item => {
+            const li = this.createElement('li', '', item.title || item.name || item);
+            li.setAttribute('role', 'menuitem');
+            li.setAttribute('tabindex', '0');
+            li.setAttribute('aria-selected', 'false');
+
+            const imageUrl = item.image || item.img || '';
+
+            li.addEventListener('click', () => this.selectSubmenuItem(li, imageUrl));
+            li.addEventListener('keydown', (e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    this.selectSubmenuItem(li, imageUrl);
+                }
+            });
+
+            ul.appendChild(li);
+        });
+
+        submenuSection.appendChild(ul);
+    }
+
+    selectSubmenuItem(element, imageUrl) {
+        this.clearSubmenuSelections();
+        
+        element.classList.add('selected');
+        element.setAttribute('aria-selected', 'true');
+
         const imagePanel = this.dom.get('imagePanel');
         if (imagePanel) {
-            imagePanel.innerHTML = `<p>Image for <strong>${selectedOption}</strong> will be displayed here</p>`;
+            if (imageUrl) {
+                imagePanel.innerHTML = `<img src="${imageUrl}" alt="${element.textContent}" />`;
+            } else {
+                imagePanel.innerHTML = '<p>No image available</p>';
+            }
         }
     }
 
@@ -395,7 +383,9 @@ class VMAutomobileApp {
 
         suggestionsList.innerHTML = '';
 
-        if (query.length < window.APP_window.APP_CONFIG.SEARCH_MIN_LENGTH) {
+        // FIX: Changed from window.APP_window.APP_CONFIG to window.APP_CONFIG
+        const config = window.APP_CONFIG || CONFIG;
+        if (query.length < config.SEARCH_MIN_LENGTH) {
             suggestionsList.style.display = 'none';
             return;
         }
@@ -474,7 +464,9 @@ class VMAutomobileApp {
         
         if (!topBar) return;
 
-        if (currentScrollY > this.state.lastScrollY && currentScrollY > window.APP_CONFIG.SCROLL_THRESHOLD) {
+        // FIX: Use CONFIG safely with fallback
+        const config = window.APP_CONFIG || CONFIG;
+        if (currentScrollY > this.state.lastScrollY && currentScrollY > config.SCROLL_THRESHOLD) {
             // Scrolling down & passed threshold
             topBar.classList.add('hidden');
         } else {
@@ -500,32 +492,10 @@ class VMAutomobileApp {
             }
         });
     }
-/* ================================ */
-/* UTILITY FUNCTIONS */
-/* ================================ */
 
-function showNotification(message, type = 'info', duration = 5000) {
-    const notification = document.getElementById('notification');
-    const messageEl = document.getElementById('notificationMessage');
-    const closeBtn = document.getElementById('notificationClose');
-    
-    if (!notification || !messageEl) return;
-    
-    // Set message and type
-    messageEl.textContent = message;
-    notification.className = `notification ${type} show`;
-    
-    // Auto-hide after duration
-    const timeout = setTimeout(() => {
-        notification.classList.remove('show');
-    }, duration);
-    
-    // Close button
-    closeBtn.onclick = () => {
-        clearTimeout(timeout);
-        notification.classList.remove('show');
-    };
-}
+    /* ================================ */
+    /* UTILITY FUNCTIONS */
+    /* ================================ */
 
     createElement(tag, className = '', textContent = '') {
         const element = document.createElement(tag);
@@ -567,8 +537,9 @@ function showNotification(message, type = 'info', duration = 5000) {
 
     setupAnimations() {
         const sections = this.dom.getAll('.overlay-section');
+        const config = window.APP_CONFIG || CONFIG;
         sections.forEach((section, index) => {
-            section.style.transitionDelay = `${index * window.APP_CONFIG.TRANSITION_DELAYS.SECTION}s`;
+            section.style.transitionDelay = `${index * config.TRANSITION_DELAYS.SECTION}s`;
         });
     }
 
@@ -582,6 +553,35 @@ function showNotification(message, type = 'info', duration = 5000) {
 
         const searchToggle = this.dom.get('searchToggle');
         if (searchToggle) searchToggle.setAttribute('aria-expanded', 'false');
+    }
+}
+
+/* ================================ */
+/* GLOBAL UTILITY FUNCTIONS */
+/* ================================ */
+
+function showNotification(message, type = 'info', duration = 5000) {
+    const notification = document.getElementById('notification');
+    const messageEl = document.getElementById('notificationMessage');
+    const closeBtn = document.getElementById('notificationClose');
+    
+    if (!notification || !messageEl) return;
+    
+    // Set message and type
+    messageEl.textContent = message;
+    notification.className = `notification ${type} show`;
+    
+    // Auto-hide after duration
+    const timeout = setTimeout(() => {
+        notification.classList.remove('show');
+    }, duration);
+    
+    // Close button
+    if (closeBtn) {
+        closeBtn.onclick = () => {
+            clearTimeout(timeout);
+            notification.classList.remove('show');
+        };
     }
 }
 
@@ -602,8 +602,4 @@ document.addEventListener('DOMContentLoaded', () => {
 // Export for module usage if needed
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = VMAutomobileApp;
-
 }
-
-
-

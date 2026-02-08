@@ -51,6 +51,8 @@ class DOMCache {
         this.set('searchToggle', '#searchToggle');
         this.set('searchInput', '#searchInput');
         this.set('suggestionsList', '#suggestionsList');
+        // Loading indicator
+        this.set('loadingOverlay', '#loadingOverlay');
     }
 
     set(key, selector) {
@@ -602,5 +604,6 @@ if (typeof module !== 'undefined' && module.exports) {
     module.exports = VMAutomobileApp;
 
 }
+
 
 
